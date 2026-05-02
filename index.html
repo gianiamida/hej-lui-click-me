@@ -9,27 +9,29 @@
             margin: 0;
             padding: 0;
             height: 100%;
-            font-family: 'Courier New', Courier, monospace; /* Keeping it simple and dorky */
+            font-family: 'Courier New', Courier, monospace;
             background-color: white;
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
+            cursor: pointer;
         }
 
         .screen {
-            display: none; /* Hide all screens by default */
+            display: none;
             text-align: center;
-            width: 80%;
+            width: 85%;
             max-width: 600px;
             animation: fadeIn 0.8s ease-in;
+            z-index: 10; /* Keep text above hearts */
         }
 
         .active {
-            display: block; /* Only show the active screen */
+            display: block;
         }
 
-        /* First Page Button Style */
+        /* First Page Box */
         .click-box {
             border: 2px solid green;
             padding: 20px 40px;
@@ -43,12 +45,21 @@
             background-color: yellow;
         }
 
-        /* Slideshow Text */
-        .slide-text {
+        /* Slideshow & Message Text */
+        .slide-text, .message-list {
             font-size: 1.2rem;
             line-height: 1.6;
-            margin-bottom: 20px;
             color: #333;
+        }
+
+        .message-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .message-list li {
+            margin-bottom: 15px;
+            font-weight: bold;
         }
 
         .hint {
@@ -59,16 +70,20 @@
             letter-spacing: 1px;
         }
 
-        /* Final Messages */
-        .message-list {
-            list-style: none;
-            padding: 0;
-            text-align: left;
+        /* Heart Animation */
+        .heart {
+            position: absolute;
+            color: #ff80ab;
+            font-size: 20px;
+            user-select: none;
+            pointer-events: none;
+            animation: floatUp 3s linear forwards;
+            z-index: 1;
         }
 
-        .message-list li {
-            margin-bottom: 15px;
-            font-size: 1.1rem;
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0); opacity: 1; }
+            100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
         }
 
         @keyframes fadeIn {
@@ -89,24 +104,27 @@
         <div class="click-box" onclick="nextScreen(2)">click here! &lt;3</div>
     </div>
 
-    <!-- SCREEN 2: The Intro -->
+    <!-- SCREEN 2: Intro -->
     <div id="screen2" class="screen" onclick="nextScreen(3)">
         <h1>let me introduce you to my lui! :&gt;</h1>
         <p class="hint">(click to continue)</p>
     </div>
 
-    <!-- SCREEN 3: The Slideshow -->
+    <!-- SCREEN 3: Slideshow -->
     <div id="screen3" class="screen" onclick="showNextSlide()">
-        <div id="slide-content" class="slide-text">
-            <!-- Content will be injected by JavaScript -->
-        </div>
+        <div id="slide-content" class="slide-text"></div>
         <p class="hint">(click to next point)</p>
     </div>
 
-    <!-- SCREEN 4: The Messages -->
-    <div id="screen4" class="screen" onclick="nextScreen(5)">
+    <!-- SCREEN 4: The Single Sentence -->
+    <div id="screen4" class="screen" onclick="triggerHeartsAndMessages()">
+        <p class="slide-text">now that you have met him, please be kinder to him</p>
+        <p class="hint">(click me)</p>
+    </div>
+
+    <!-- SCREEN 5: The "Please" List + Hearts -->
+    <div id="screen5" class="screen" onclick="nextScreen(6)">
         <ul class="message-list">
-            <li>✨ now that you have met him, please be kinder to him</li>
             <li>✨ please give him a little break and don’t let his head get stuck in his ass</li>
             <li>✨ please give him a little clap for each of his wins, big or small</li>
             <li>✨ i hope he knows just how much he means to me and how much i adore him</li>
@@ -115,38 +133,31 @@
         <p class="hint">(click to finish)</p>
     </div>
 
-    <!-- SCREEN 5: The Final -->
-    <div id="screen5" class="screen">
+    <!-- SCREEN 6: Final Message -->
+    <div id="screen6" class="screen">
         <p class="final-text">happy birthday, lui. i love you &lt;3</p>
         <p>- your ani</p>
     </div>
 
     <script>
-        // Slides content
         const slides = [
-            "he is a 6 ft tall, funky, and dorky man with such glorious, blonde hair",
-            "he is smart. but it is so much more than just that—he is a bright student, driven, and disciplined. i am so proud of him and how far he has made it. i super can't wait for his journey and to cheer him on from beside him.",
-            "he is someone you can depend on. a person who will be there for you through tough times, be patient with you, and listen to you. or maybe just to me (haha)",
-            "he gets annoyed pretty easily, but he said having me around doesn’t annoy him as much (hehe). this is actually another reason why we go well together because i love being angry. he gets that anger, and i don’t feel weird and alone when i am angry.",
+            "he is a 6 ft tall, funky, and dorky man with such glorious, blonde hair💁🏼‍♂️",
+            "he is smart. but it is so much more than just that—he is a bright student, driven, and disciplined. i am so proud of him and how far he has made it. i super can't wait for his journey and to cheer him on from beside him!",
+            "he is someone you can depend on. a person who will be there for you through tough times, be patient with you, and listen to you. or maybe just to me :))",
+            "he gets annoyed pretty easily, but he said having me around doesn’t annoy him as much🥰. this is actually another reason why we go well together because i love being angry. he gets that anger, and i don’t feel weird and alone when i am angry.",
             "he is someone who sits with my mess and still talks to it in the softest way he knows how.",
             "he is the “well, actually…” guy and i don’t mind at all. he thinks that’s annoying, but i can learn a ton from his “well, actually...” i don’t really need ai because i have him when i am curious about silly things. that shows just how smart he is and just how lucky i am to have him in this life.",
-            "he is veeeeery handsome. i don't think he knows how good-looking he is! i love the way he dresses and his fashion sense. he has bars, though he can be a bit cocky about it sometimes.",
+            "he is veeeeery handsome😻 i don't think he knows how good-looking he is! i love the way he dresses and his fashion sense. he has BARS, though he can be a bit cocky about it sometimes🙄",
             "his point of view of the world is so tender and filled with positivity. he is a person with the strongest will and the gentlest heart. this world is so lucky to have him, just as i am.",
-            "and today is his birthdaaay!!!!"
+            "and today is his birthdaaay!!!!🥳"
         ];
 
         let currentSlide = 0;
 
         function nextScreen(screenNum) {
-            // Hide all screens
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            // Show the requested screen
             document.getElementById('screen' + screenNum).classList.add('active');
-            
-            // If moving to the slideshow screen, start the first slide
-            if (screenNum === 3) {
-                showNextSlide();
-            }
+            if (screenNum === 3) showNextSlide();
         }
 
         function showNextSlide() {
@@ -154,8 +165,28 @@
                 document.getElementById('slide-content').innerText = slides[currentSlide];
                 currentSlide++;
             } else {
-                nextScreen(4); // Move to messages after last slide
+                nextScreen(4);
             }
+        }
+
+        function triggerHeartsAndMessages() {
+            nextScreen(5);
+            // Create 50 hearts
+            for (let i = 0; i < 50; i++) {
+                setTimeout(createHeart, i * 100);
+            }
+        }
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
+            document.body.appendChild(heart);
+            
+            // Remove heart after animation
+            setTimeout(() => { heart.remove(); }, 5000);
         }
     </script>
 </body>
